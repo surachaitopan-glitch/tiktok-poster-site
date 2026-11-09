@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Connecting TikTok… | กำลังเชื่อม TikTok</title>
+<style>body{font-family:system-ui,sans-serif;max-width:560px;margin:48px auto;padding:0 16px;line-height:1.6}</style>
+</head>
+<body>
+<!--
+  OAuth redirect hop. TikTok requires an https redirect URI, but the app runs on the owner's own
+  computer. This static page only forwards the query (code/state/error) to
+  http://localhost:3001/auth/tiktok/callback IN THE OWNER'S BROWSER. Nothing is stored or logged
+  here, and the target is hard-coded to localhost (it must never become an open redirect).
+-->
+<h2>กำลังกลับไปที่โปรแกรมบนเครื่องของคุณ…</h2>
+<p id="msg">Returning to the app on your own computer…</p>
+<script>
+(function () {
+  var p = new URLSearchParams(location.search);
+  var target = new URL('http://localhost:3001/auth/tiktok/callback');
+  ['code', 'state', 'error', 'error_description'].forEach(function (k) { if (p.has(k)) target.searchParams.set(k, p.get(k)); });
+  document.getElementById('msg').innerHTML = 'ถ้าไม่เด้งกลับเอง ให้เปิดโปรแกรมที่ <code>localhost:3001</code> ก่อน แล้วกดรีเฟรชหน้านี้ / If nothing happens, start the app on localhost:3001 and reload this page.';
+  location.replace(target.toString());
+})();
+</script>
+</body>
+</html>
